@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Herda configurações do base
+resources:
+- ../../base/
+- namespace.yaml
+
+# Configurações específicas do staging
+namespace: kids-app-staging
+commonLabels:
+  environment: staging
+  app: kids-api
+
+images:
+- name: kids-api
+  newTag: latest  # Ou use um tag específico para staging
+
+configMapGenerator:
+- name: kids-api-config
+  behavior: merge
+  literals:
+    - DATABASE_URL=postgres://kidsuser:kidssecret@postgres:5432/kidsdb
+
+patchesStrategicMerge:
+- patch-deployment.yaml
+- patch-postgres.yaml

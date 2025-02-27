@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kids-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kids-api
+  template:
+    metadata:
+      labels:
+        app: kids-api
+    spec:
+      containers:
+      - name: api
+        image: kids-api:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: kids-api-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
