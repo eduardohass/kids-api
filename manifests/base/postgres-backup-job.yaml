@@ -1,26 +1,31 @@
 apiVersion: batch/v1
-kind: Job
+kind: CronJob
 metadata:
   name: postgres-backup
 spec:
-  template:
+  schedule: "0 */6 * * *"  # A cada 6 horas
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
     spec:
-      containers:
-      - name: backup
-        image: postgres:15-alpine
-        command: ["/bin/sh", "-c"]
-        args:
-          - >-
-            pg_dump -h postgres -U $(POSTGRES_USER) -d $(POSTGRES_DB) -Fc > /backup/$(date +%Y-%m-%d-%H%M).dump &&
-            echo "Backup completed"
-        envFrom:
-        - secretRef:
-            name: postgres-secret
-        volumeMounts:
-        - name: backup-volume
-          mountPath: /backup
-      restartPolicy: Never
-      volumes:
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: postgres-backup-pvc 
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: postgres:15-alpine
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                pg_dump -h postgres -U $(POSTGRES_USER) -d $(POSTGRES_DB) -Fc > /backup/backup-$(date +%Y%m%d-%H%M%S).dump
+            volumeMounts:
+            - name: backup
+              mountPath: /backup
+            envFrom:
+            - secretRef:
+                name: postgres-secret
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup
+            persistentVolumeClaim:
+              claimName: postgres-backup-pvc 

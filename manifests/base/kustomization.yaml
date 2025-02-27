@@ -8,9 +8,15 @@ resources:
 - postgresql.yaml
 - postgres-backup-pvc.yaml
 - postgres-backup-job.yaml
+- postgres-init-script.yaml
 
-commonLabels:
-  app: kids-api
+labels:
+- pairs:
+    app: kids-api
+
+images:
+- name: eduhass/kids-api
+  newTag: latest 
 
 secretGenerator:
 - name: postgres-secret
@@ -18,3 +24,8 @@ secretGenerator:
   - POSTGRES_USER=kidsuser
   - POSTGRES_PASSWORD=kidssecret
   - POSTGRES_DB=kidsdb
+- name: kids-api-secrets
+  literals:
+  - AUTH0_DOMAIN=dev-tenant.auth0.com
+  - AUTH0_AUDIENCE=https://dev-api.kids.com
+  - DATABASE_URL=postgres://kidsuser:kidssecret@postgres:5432/kidsdb?sslmode=disable

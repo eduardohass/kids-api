@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kids-api-config
+data:
+  AUTH0_DOMAIN: "your-auth0-domain"
+  AUTH0_AUDIENCE: "your-auth0-audience"

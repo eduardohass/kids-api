@@ -19,6 +19,9 @@ func NewRouter(
 ) *mux.Router {
 	r := mux.NewRouter()
 
+	// Health check route (public)
+	r.HandleFunc("/health", HealthHandler).Methods("GET")
+
 	// Handlers
 	childHandler := NewChildHandler(childService)
 	caretakerHandler := NewCaretakerHandler(caretakerService)

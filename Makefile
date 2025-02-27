@@ -12,17 +12,17 @@ push:
 	@docker push ${DOCKER_REGISTRY}/kids-api:latest
 
 deploy-staging:
-	@kustomize build kubernetes/overlays/staging | kubectl apply -f -
+	@kustomize build manifests/overlays/staging | kubectl apply -f -
 
 delete-staging:
-	@kustomize build kubernetes/overlays/staging | kubectl delete -f -
+	@kustomize build manifests/overlays/staging | kubectl delete -f -
 
 port-forward-staging:
 	@kubectl -n kids-app-staging port-forward svc/kids-api 8080:80
 
 deploy-prod:
 	@kubectl config use-context production
-	@kustomize build kubernetes/overlays/production | kubectl apply -f -
+	@kustomize build manifests/overlays/production | kubectl apply -f -
 
 migrate:
 	@kubectl run kids-api-migrations --image=${DOCKER_REGISTRY}/kids-api:${VERSION} --restart=Never -- \
@@ -35,4 +35,4 @@ rollback:
 deploy-staging-with-backup: deploy-staging
 	@echo "Creating database backup..."
 	@kubectl delete job postgres-backup -n kids-app-staging --ignore-not-found=true
-	@kubectl apply -f kubernetes/base/postgres-backup-job.yaml -n kids-app-staging
+	@kubectl apply -f manifests/base/postgres-backup-job.yaml -n kids-app-staging

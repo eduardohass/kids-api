@@ -20,31 +20,41 @@ spec:
         image: postgres:15-alpine
         ports:
         - containerPort: 5432
-        envFrom:
-        - secretRef:
-            name: postgres-secret
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
         livenessProbe:
           exec:
-            command: ["pg_isready", "-U", "kidsuser"]
+            command: ["pg_isready", "-h", "localhost", "-U", "kidsuser", "-d", "kidsdb"]
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           exec:
-            command: ["pg_isready", "-U", "kidsuser"]
+            command: ["pg_isready", "-h", "localhost", "-U", "kidsuser", "-d", "kidsdb"]
           initialDelaySeconds: 5
           periodSeconds: 5
-      initContainers:
-      - name: pre-deploy-backup
-        image: postgres:15-alpine
-        command: ["/bin/sh", "-c"]
-        args:
-          - pg_dump -h postgres -U $(POSTGRES_USER) -d $(POSTGRES_DB) -Fc > /backup/pre-deploy-$(date +%s).dump
-        volumeMounts:
-        - name: backup-volume
-          mountPath: /backup
+      volumes:
+      - name: init-script
+        configMap:
+          name: postgres-init-script
   volumeClaimTemplates:
   - metadata:
       name: postgres-data
