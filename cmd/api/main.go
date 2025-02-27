@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/eduardohass/kids-api/internal/auth"
 	"github.com/eduardohass/kids-api/internal/config"
 	"github.com/eduardohass/kids-api/internal/handlers"
 	"github.com/eduardohass/kids-api/internal/repository"
@@ -44,12 +43,8 @@ func main() {
 	volunteerService := services.NewVolunteerService(volunteerRepo)
 	groupService := services.NewGroupService(groupRepo)
 
-	// Configurar autenticação
-	authenticator := auth.NewAuthenticator(cfg.Auth0Domain, cfg.Auth0Audience)
-
 	// Configurar router
 	router := handlers.NewRouter(
-		authenticator,
 		childService,
 		caretakerService,
 		volunteerService,
