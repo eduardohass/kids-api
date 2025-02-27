@@ -54,7 +54,7 @@ func main() {
 	})
 
 	app := jwtMiddleware.Handler(myHandler)
-	http.ListenAndServe("0.0.0.0:3000", app)
+	http.ListenAndServe("0.0.0.0:8080", app)
 }
 ````
 
