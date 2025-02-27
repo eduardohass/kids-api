@@ -3,15 +3,12 @@
 package handlers
 
 import (
-	"github.com/eduardohass/kids-api/internal/auth"
 	"github.com/eduardohass/kids-api/internal/services"
 	"github.com/gorilla/mux"
 )
 
 // NewRouter creates and configures a new router with all API endpoints.
-// It requires authentication and service instances to handle the requests.
 func NewRouter(
-	auth *auth.Authenticator,
 	childService services.ChildService,
 	caretakerService services.CaretakerService,
 	volunteerService services.VolunteerService,
@@ -31,39 +28,33 @@ func NewRouter(
 	// API routes
 	api := r.PathPrefix("/api/v1").Subrouter()
 
-	// Rotas públicas (se necessário)
-
-	// Rotas autenticadas
-	protected := api.PathPrefix("").Subrouter()
-	protected.Use(auth.GetMiddleware())
-
 	// Rotas para crianças
-	protected.HandleFunc("/children", childHandler.Create).Methods("POST")
-	protected.HandleFunc("/children", childHandler.List).Methods("GET")
-	protected.HandleFunc("/children/{id}", childHandler.Get).Methods("GET")
-	protected.HandleFunc("/children/{id}", childHandler.Update).Methods("PUT")
-	protected.HandleFunc("/children/{id}", childHandler.Delete).Methods("DELETE")
+	api.HandleFunc("/children", childHandler.Create).Methods("POST")
+	api.HandleFunc("/children", childHandler.List).Methods("GET")
+	api.HandleFunc("/children/{id}", childHandler.Get).Methods("GET")
+	api.HandleFunc("/children/{id}", childHandler.Update).Methods("PUT")
+	api.HandleFunc("/children/{id}", childHandler.Delete).Methods("DELETE")
 
 	// Rotas para responsáveis
-	protected.HandleFunc("/caretakers", caretakerHandler.Create).Methods("POST")
-	protected.HandleFunc("/caretakers", caretakerHandler.List).Methods("GET")
-	protected.HandleFunc("/caretakers/{id}", caretakerHandler.Get).Methods("GET")
-	protected.HandleFunc("/caretakers/{id}", caretakerHandler.Update).Methods("PUT")
-	protected.HandleFunc("/caretakers/{id}", caretakerHandler.Delete).Methods("DELETE")
+	api.HandleFunc("/caretakers", caretakerHandler.Create).Methods("POST")
+	api.HandleFunc("/caretakers", caretakerHandler.List).Methods("GET")
+	api.HandleFunc("/caretakers/{id}", caretakerHandler.Get).Methods("GET")
+	api.HandleFunc("/caretakers/{id}", caretakerHandler.Update).Methods("PUT")
+	api.HandleFunc("/caretakers/{id}", caretakerHandler.Delete).Methods("DELETE")
 
 	// Rotas para voluntários
-	protected.HandleFunc("/volunteers", volunteerHandler.Create).Methods("POST")
-	protected.HandleFunc("/volunteers", volunteerHandler.List).Methods("GET")
-	protected.HandleFunc("/volunteers/{id}", volunteerHandler.Get).Methods("GET")
-	protected.HandleFunc("/volunteers/{id}", volunteerHandler.Update).Methods("PUT")
-	protected.HandleFunc("/volunteers/{id}", volunteerHandler.Delete).Methods("DELETE")
+	api.HandleFunc("/volunteers", volunteerHandler.Create).Methods("POST")
+	api.HandleFunc("/volunteers", volunteerHandler.List).Methods("GET")
+	api.HandleFunc("/volunteers/{id}", volunteerHandler.Get).Methods("GET")
+	api.HandleFunc("/volunteers/{id}", volunteerHandler.Update).Methods("PUT")
+	api.HandleFunc("/volunteers/{id}", volunteerHandler.Delete).Methods("DELETE")
 
 	// Rotas para grupos
-	protected.HandleFunc("/groups", groupHandler.Create).Methods("POST")
-	protected.HandleFunc("/groups", groupHandler.List).Methods("GET")
-	protected.HandleFunc("/groups/{id}", groupHandler.Get).Methods("GET")
-	protected.HandleFunc("/groups/{id}", groupHandler.Update).Methods("PUT")
-	protected.HandleFunc("/groups/{id}", groupHandler.Delete).Methods("DELETE")
+	api.HandleFunc("/groups", groupHandler.Create).Methods("POST")
+	api.HandleFunc("/groups", groupHandler.List).Methods("GET")
+	api.HandleFunc("/groups/{id}", groupHandler.Get).Methods("GET")
+	api.HandleFunc("/groups/{id}", groupHandler.Update).Methods("PUT")
+	api.HandleFunc("/groups/{id}", groupHandler.Delete).Methods("DELETE")
 
 	return r
 }
