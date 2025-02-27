@@ -1,3 +1,4 @@
+// Package handlers provides the HTTP handlers for the caretaker operations.
 package handlers
 
 import (
@@ -9,16 +10,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// CaretakerHandler handles HTTP requests related to caretaker operations.
 type CaretakerHandler struct {
 	service services.CaretakerService
 }
 
+// NewCaretakerHandler creates a new CaretakerHandler instance.
 func NewCaretakerHandler(service services.CaretakerService) *CaretakerHandler {
 	return &CaretakerHandler{
 		service: service,
 	}
 }
 
+// Create handles POST requests to create a new caretaker.
 func (h *CaretakerHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var caretaker models.Caretaker
 	if err := json.NewDecoder(r.Body).Decode(&caretaker); err != nil {
@@ -35,6 +39,7 @@ func (h *CaretakerHandler) Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(caretaker)
 }
 
+// Get handles GET requests to retrieve a caretaker by ID.
 func (h *CaretakerHandler) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -48,6 +53,7 @@ func (h *CaretakerHandler) Get(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(caretaker)
 }
 
+// Update handles PUT requests to update an existing caretaker.
 func (h *CaretakerHandler) Update(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -67,6 +73,7 @@ func (h *CaretakerHandler) Update(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(caretaker)
 }
 
+// Delete handles DELETE requests to remove a caretaker.
 func (h *CaretakerHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -79,6 +86,7 @@ func (h *CaretakerHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// List handles GET requests to retrieve a list of caretakers.
 func (h *CaretakerHandler) List(w http.ResponseWriter, r *http.Request) {
 	// TODO: Implementar paginação e filtros a partir dos query parameters
 	page := 1

@@ -1,3 +1,4 @@
+// Package models provides the definitions for the models used in the application.
 package models
 
 import "time"

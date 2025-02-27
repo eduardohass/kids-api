@@ -1,4 +1,5 @@
 // internal/handlers/router.go
+// Package handlers provides HTTP request handlers for the API endpoints.
 package handlers
 
 import (
@@ -7,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// NewRouter creates and configures a new router with all API endpoints.
+// It requires authentication and service instances to handle the requests.
 func NewRouter(
 	auth *auth.Authenticator,
 	childService services.ChildService,

@@ -1,4 +1,4 @@
-// internal/repository/child_repository.go
+// Package repository provides data access layer implementations.
 package repository
 
 import (
@@ -10,6 +10,9 @@ import (
 	"github.com/eduardohass/kids-api/internal/models"
 	"github.com/jmoiron/sqlx"
 )
+
+// ErrNotFound is returned when a requested entity is not found in the database.
+var ErrNotFound = errors.New("child not found")
 
 type ChildRepository interface {
 	Create(ctx context.Context, child *models.Child) error
@@ -271,5 +274,3 @@ func (r *childRepository) associateAllergy(ctx context.Context, exec sqlx.Execer
 	_, err := exec.ExecContext(ctx, query, childID, allergyID)
 	return err
 }
-
-var ErrNotFound = errors.New("child not found")

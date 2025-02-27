@@ -1,3 +1,4 @@
+// Package handlers provides the HTTP handlers for the group operations.
 package handlers
 
 import (

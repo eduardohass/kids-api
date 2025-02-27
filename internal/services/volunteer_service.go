@@ -1,3 +1,4 @@
+// Package services provides the business logic for the volunteer operations.
 package services
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/eduardohass/kids-api/internal/repository"
 )
 
+// VolunteerService represents/handles/provides ...
 type VolunteerService interface {
 	CreateVolunteer(ctx context.Context, volunteer *models.Volunteer) error
 	GetVolunteer(ctx context.Context, id string) (*models.Volunteer, error)
@@ -15,6 +17,7 @@ type VolunteerService interface {
 	ListVolunteers(ctx context.Context, filter map[string]interface{}, page, pageSize int) ([]*models.Volunteer, error)
 }
 
+// volunteerService represents/handles/provides ...
 type volunteerService struct {
 	repo repository.VolunteerRepository
 }

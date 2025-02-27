@@ -1,3 +1,4 @@
+// Package services provides the business logic for the group operations.
 package services
 
 import (

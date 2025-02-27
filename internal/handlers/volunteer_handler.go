@@ -1,3 +1,4 @@
+// Package handlers provides the HTTP handlers for the volunteer operations.
 package handlers
 
 import (
